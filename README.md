@@ -65,52 +65,59 @@ Not sure which one? Run `/start` — Claude will ask you 6 simple questions and 
 
 ## Quick start
 
-### WSL2 / Linux
+founder-stack is installed once as a tool, then used to configure any number of projects.
 
+### Step 1 — Install the tool (once)
+
+**WSL2 / Linux**
 ```bash
 git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
-cd ~/founder-stack
-bash scripts/setup-wsl.sh
-```
-
-This installs: Node 20, pnpm, Claude Code, RTK (token optimizer), SuperClaude, PostgreSQL.
-
-```bash
-# Authenticate
+bash ~/founder-stack/scripts/setup-wsl.sh
 claude   # sign in with your Claude.ai account (Pro or Max)
-
-# Create your first project
-bash scripts/bootstrap-project.sh my-project --stack b --git
-cd ~/projects/my-project
-claude
 ```
 
-### Windows (native)
-
-Open PowerShell as Administrator:
-
+**Windows** — open PowerShell as Administrator:
 ```powershell
 git clone https://github.com/avtplay/founder-stack.git $env:USERPROFILE\founder-stack
-cd $env:USERPROFILE\founder-stack
 Set-ExecutionPolicy Bypass -Scope Process
-.\scripts\setup-windows.ps1
+& "$env:USERPROFILE\founder-stack\scripts\setup-windows.ps1"
+claude   # sign in with your Claude.ai account (Pro or Max)
 ```
 
-This installs: Node 20, pnpm, Claude Code, Git, PostgreSQL.
+---
 
-```powershell
-# Authenticate
-claude   # sign in with your Claude.ai account (Pro or Max)
+### Step 2 — Start a new project
 
-# Create your first project
-.\scripts\bootstrap-project.ps1 my-project -Stack b -Git
-cd $env:USERPROFILE\projects\my-project
+Create an empty folder for your project, go into it, and run the bootstrap:
+
+**WSL2 / Linux**
+```bash
+mkdir ~/my-project && cd ~/my-project
+bash ~/founder-stack/scripts/bootstrap-project.sh --stack b --git
 claude
 ```
 
-> **Windows note:** RTK (token compression) and SuperClaude (`/sc:` commands) are not available on native Windows. All AI agents, commands, and the full workflow work normally.
+**Windows**
+```powershell
+mkdir $env:USERPROFILE\my-project; cd $env:USERPROFILE\my-project
+& "$env:USERPROFILE\founder-stack\scripts\bootstrap-project.ps1" -Stack b -Git
+claude
+```
 
-Then just tell Claude: **"I want to start my project"** — it takes it from there.
+The bootstrap sets up the AI config **in your current folder** — no files created elsewhere.
+If the folder was previously a founder-stack clone, the git remote is cleaned up automatically.
+
+---
+
+### Step 3 — Tell Claude what you want to build
+
+Once Claude Code is open in your project folder, just say:
+
+> **"I want to start my project"**
+
+Claude will ask you a few simple questions and guide you through the rest.
+
+> **Windows note:** RTK (token compression) and SuperClaude (`/sc:` commands) are not available on native Windows. All AI agents, commands, and the full workflow work normally.
 
 ---
 

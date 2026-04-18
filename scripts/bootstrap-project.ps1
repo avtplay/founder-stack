@@ -1,11 +1,15 @@
 # =============================================================
-# bootstrap-project.ps1 — Scaffold a new project with AI config
-# Usage: .\scripts\bootstrap-project.ps1 <name> --stack <a|b|c-firebase|c-supabase|d> [--git]
+# bootstrap-project.ps1 — Set up AI config in the current directory
+# Usage (from inside your project folder):
+#   .\path\to\founder-stack\scripts\bootstrap-project.ps1 --Stack <a|b|c-firebase|c-supabase|d> [-Git]
+#
+# Optional: override project name (defaults to current folder name)
+#   .\bootstrap-project.ps1 my-app -Stack b -Git
 # =============================================================
 
 param(
-    [Parameter(Position=0, Mandatory=$true)]
-    [string]$ProjectName,
+    [Parameter(Position=0)]
+    [string]$ProjectName = "",
 
     [Parameter(Mandatory=$true)]
     [ValidateSet("a","b","c-firebase","c-supabase","d")]
@@ -20,6 +24,9 @@ function Info($msg)    { Write-Host "▶ $msg" -ForegroundColor Yellow }
 function Success($msg) { Write-Host "✓ $msg" -ForegroundColor Green }
 function Err($msg)     { Write-Host "✗ $msg" -ForegroundColor Red; exit 1 }
 
+# Default project name = current folder name
+if (-not $ProjectName) { $ProjectName = Split-Path -Leaf (Get-Location) }
+
 $StackLabels = @{
     "a"          = "HTML Mockup (Tailwind CDN)"
     "b"          = "React + Vite (local / deployable)"
@@ -28,22 +35,19 @@ $StackLabels = @{
     "d"          = "Full Stack — Advanced Mode"
 }
 
-$TargetDir  = Join-Path $env:USERPROFILE "projects\$ProjectName"
-$ScriptDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
-$StackDir   = Split-Path -Parent $ScriptDir
+$TargetDir   = (Get-Location).Path
+$ScriptDir   = Split-Path -Parent $MyInvocation.MyCommand.Path
+$StackDir    = Split-Path -Parent $ScriptDir
 $TemplateDir = Join-Path $StackDir "templates\stacks"
 
 Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  Bootstrapping: $ProjectName"
-Write-Host "║  Stack: $($StackLabels[$Stack])"
-Write-Host "║  Git: $($Git.IsPresent)"
+Write-Host "║  Project : $ProjectName"
+Write-Host "║  Stack   : $($StackLabels[$Stack])"
+Write-Host "║  Target  : $TargetDir"
+Write-Host "║  Git     : $($Git.IsPresent)"
 Write-Host "╚══════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
-
-# ── Create project directory ─────────────────────────────────
-New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
-Set-Location $TargetDir
 
 # ── Copy AI config ────────────────────────────────────────────
 Info "Claude Code configuration"
@@ -52,14 +56,9 @@ New-Item -ItemType Directory -Path ".claude\commands" -Force | Out-Null
 
 Copy-Item "$StackDir\.claude\agents\*"   ".claude\agents\"   -Force
 Copy-Item "$StackDir\.claude\commands\*" ".claude\commands\" -Force
-
-# Use Windows-specific settings (no RTK hook, PowerShell lint)
 Copy-Item "$StackDir\.claude\settings.windows.json" ".claude\settings.json" -Force
-
-# CLAUDE.md
 Copy-Item "$StackDir\CLAUDE.md" "." -Force
 
-# AGENTS.md — stack-specific
 $agentsSource = switch ($Stack) {
     "a"          { Join-Path $TemplateDir "a-maquette\AGENTS.md" }
     "b"          { Join-Path $TemplateDir "b-react\AGENTS.md" }
@@ -68,7 +67,6 @@ $agentsSource = switch ($Stack) {
     "d"          { Join-Path $TemplateDir "d-fullstack\AGENTS.md" }
 }
 Copy-Item $agentsSource "AGENTS.md" -Force
-
 Success "Claude Code config ready"
 
 # ── .gitignore ────────────────────────────────────────────────
@@ -98,7 +96,6 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 "@ | Set-Content ".env.example" -Encoding UTF8
         "" | Set-Content ".env.local" -Encoding UTF8
-        Info ".env.example created — fill in your Firebase keys"
     }
     "c-supabase" {
         @"
@@ -106,7 +103,6 @@ VITE_SUPABASE_URL=https://xxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=
 "@ | Set-Content ".env.example" -Encoding UTF8
         "" | Set-Content ".env.local" -Encoding UTF8
-        Info ".env.example created — fill in your Supabase keys"
     }
     "d" {
         @"
@@ -120,26 +116,39 @@ VITE_API_URL=http://localhost:3000
         Copy-Item ".env.example" ".env.local"
     }
 }
-
 Success ".env configured"
 
-# ── Git (optional) ────────────────────────────────────────────
+# ── Git ───────────────────────────────────────────────────────
 if ($Git) {
-    Info "Initializing Git repository"
+    Info "Git setup"
+    # If folder is a clone of founder-stack → clean slate
+    if (Test-Path ".git") {
+        $remoteUrl = git remote get-url origin 2>$null
+        if ($remoteUrl -match "founder-stack") {
+            Info "Detected founder-stack remote — resetting git history"
+            Remove-Item -Recurse -Force ".git"
+        }
+    }
     git init -q
     git add .
     git commit -q -m "chore: init $ProjectName (stack: $Stack)"
-    Success "Git repository initialized"
+    Success "Git initialized with clean history"
+} elseif (Test-Path ".git") {
+    $remoteUrl = git remote get-url origin 2>$null
+    if ($remoteUrl -match "founder-stack") {
+        git remote remove origin 2>$null
+        Info "Removed founder-stack remote"
+    }
 }
 
 # ── Done ──────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  ✅ $ProjectName ready!" -ForegroundColor Green
+Write-Host "║  ✅ $ProjectName is ready!" -ForegroundColor Green
 Write-Host "╠══════════════════════════════════════════════════════╣" -ForegroundColor Green
 Write-Host "║"
-Write-Host "║  cd $TargetDir"
-Write-Host "║  claude"
+Write-Host "║  You are already in the project folder."
+Write-Host "║  Open Claude Code and tell it what you want to build."
 Write-Host "║"
 
 switch ($Stack) {

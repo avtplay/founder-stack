@@ -127,12 +127,22 @@ Before running the script, guide the user step by step to create their project o
 
 #### Run the script
 
+founder-stack must be available locally. If not, clone it first:
 ```bash
-bash scripts/bootstrap-project.sh <project-name> --stack <a|b|c-firebase|c-supabase|d> [--git]
+git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
 ```
+
+Then run the bootstrap **from inside the user's current project folder**:
+```bash
+bash ~/founder-stack/scripts/bootstrap-project.sh --stack <a|b|c-firebase|c-supabase|d> [--git]
+```
+
+The script sets up the AI config in the current directory.
+It also removes the founder-stack git remote if present, so the project has a clean slate.
 
 #### After the script
 
+- The user is already in their project folder — no `cd` needed
 - Give concrete next steps based on the stack
 - Suggest `/feature "<first feature>"` to start building
 

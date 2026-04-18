@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================
-# bootstrap-project.sh — Scaffold a new project with AI config
-# Usage: bash scripts/bootstrap-project.sh <nom> --stack <a|b|c-firebase|c-supabase|d> [--git]
+# bootstrap-project.sh — Set up AI config in the current directory
+# Usage (from inside your project folder):
+#   bash ~/founder-stack/scripts/bootstrap-project.sh --stack <a|b|c-firebase|c-supabase|d> [--git]
+#
+# Optional: override project name (defaults to current folder name)
+#   bash ~/founder-stack/scripts/bootstrap-project.sh my-app --stack b --git
 # =============================================================
 
 set -euo pipefail
@@ -11,26 +15,27 @@ info()    { echo -e "${YELLOW}▶ $1${RESET}"; }
 success() { echo -e "${GREEN}✓ $1${RESET}"; }
 error()   { echo -e "${RED}✗ $1${RESET}"; exit 1; }
 
-# ── Parse arguments ─────────────────────────────────────────
-PROJECT_NAME="${1:-}"
+# ── Parse arguments ──────────────────────────────────────────
+PROJECT_NAME=""
 STACK=""
 USE_GIT=false
 
-if [ -z "$PROJECT_NAME" ]; then
-  error "Nom du projet manquant. Usage: bash bootstrap-project.sh <nom> --stack <a|b|c-firebase|c-supabase|d> [--git]"
-fi
-
-shift
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --stack) STACK="$2"; shift 2 ;;
     --git)   USE_GIT=true; shift ;;
-    *) error "Argument inconnu: $1" ;;
+    --*)     error "Unknown argument: $1" ;;
+    *)       PROJECT_NAME="$1"; shift ;;
   esac
 done
 
+# Default project name = current folder name
+if [ -z "$PROJECT_NAME" ]; then
+  PROJECT_NAME="$(basename "$PWD")"
+fi
+
 if [ -z "$STACK" ]; then
-  error "Stack manquante. Usage: --stack <a|b|c-firebase|c-supabase|d>"
+  error "Missing --stack. Usage: --stack <a|b|c-firebase|c-supabase|d>"
 fi
 
 VALID_STACKS=("a" "b" "c-firebase" "c-supabase" "d")
@@ -38,47 +43,40 @@ VALID=false
 for s in "${VALID_STACKS[@]}"; do
   [[ "$STACK" == "$s" ]] && VALID=true && break
 done
-$VALID || error "Stack invalide: '$STACK'. Valeurs acceptées: a, b, c-firebase, c-supabase, d"
+$VALID || error "Invalid stack: '$STACK'. Valid values: a, b, c-firebase, c-supabase, d"
 
-# ── Setup ────────────────────────────────────────────────────
-TARGET_DIR="$HOME/projects/$PROJECT_NAME"
+# ── Paths ─────────────────────────────────────────────────────
+TARGET_DIR="$PWD"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STACK_DIR="$(dirname "$SCRIPT_DIR")"
+TEMPLATE_DIR="$STACK_DIR/templates/stacks"
 
-# Stack name for display
 case "$STACK" in
-  a)          STACK_LABEL="Maquette HTML + Tailwind" ;;
-  b)          STACK_LABEL="React + Vite (app locale/déployable)" ;;
-  c-firebase) STACK_LABEL="React + Firebase (app avec comptes)" ;;
-  c-supabase) STACK_LABEL="React + Supabase (app avec comptes)" ;;
-  d)          STACK_LABEL="Full Stack — Mode Avancé" ;;
+  a)          STACK_LABEL="HTML Mockup (Tailwind CDN)" ;;
+  b)          STACK_LABEL="React + Vite (local / deployable)" ;;
+  c-firebase) STACK_LABEL="React + Firebase (app with accounts)" ;;
+  c-supabase) STACK_LABEL="React + Supabase (app with accounts)" ;;
+  d)          STACK_LABEL="Full Stack — Advanced Mode" ;;
 esac
 
 echo ""
 echo "╔══════════════════════════════════════════════╗"
-echo "║  Bootstrapping: $PROJECT_NAME"
-echo "║  Stack: $STACK_LABEL"
-echo "║  Git: $USE_GIT"
+echo "║  Project : $PROJECT_NAME"
+echo "║  Stack   : $STACK_LABEL"
+echo "║  Target  : $TARGET_DIR"
+echo "║  Git     : $USE_GIT"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 
-mkdir -p "$TARGET_DIR"
-cd "$TARGET_DIR"
-
-# ── Copy AI config ───────────────────────────────────────────
-info "Configuration Claude Code"
+# ── Copy AI config ────────────────────────────────────────────
+info "Claude Code configuration"
 mkdir -p .claude/{agents,commands}
 
-# Copy agents and commands
-cp -r "$STACK_DIR/.claude/agents/"* .claude/agents/
+cp -r "$STACK_DIR/.claude/agents/"*   .claude/agents/
 cp -r "$STACK_DIR/.claude/commands/"* .claude/commands/
-cp "$STACK_DIR/.claude/settings.json" .claude/settings.json
+cp    "$STACK_DIR/.claude/settings.json" .claude/settings.json
+cp    "$STACK_DIR/CLAUDE.md" .
 
-# CLAUDE.md (same for all stacks — audience + workflow)
-cp "$STACK_DIR/CLAUDE.md" .
-
-# AGENTS.md — stack-specific
-TEMPLATE_DIR="$STACK_DIR/templates/stacks"
 case "$STACK" in
   a)          cp "$TEMPLATE_DIR/a-maquette/AGENTS.md" . ;;
   b)          cp "$TEMPLATE_DIR/b-react/AGENTS.md" . ;;
@@ -87,9 +85,9 @@ case "$STACK" in
   d)          cp "$TEMPLATE_DIR/d-fullstack/AGENTS.md" . ;;
 esac
 
-success "Claude Code config prête"
+success "Claude Code config ready"
 
-# ── .gitignore ───────────────────────────────────────────────
+# ── .gitignore ────────────────────────────────────────────────
 cat > .gitignore << 'EOF'
 node_modules/
 dist/
@@ -103,7 +101,7 @@ coverage/
 .firebase/
 EOF
 
-# ── .env.example (si applicable) ────────────────────────────
+# ── .env.example ──────────────────────────────────────────────
 case "$STACK" in
   c-firebase)
     cat > .env.example << 'EOF'
@@ -115,7 +113,6 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 EOF
     touch .env.local
-    info ".env.example créé — remplis avec tes clés Firebase"
     ;;
   c-supabase)
     cat > .env.example << 'EOF'
@@ -123,7 +120,6 @@ VITE_SUPABASE_URL=https://xxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=
 EOF
     touch .env.local
-    info ".env.example créé — remplis avec tes clés Supabase"
     ;;
   d)
     cat > .env.example << 'EOF'
@@ -138,45 +134,60 @@ EOF
     ;;
 esac
 
-success ".env configuré"
+success ".env configured"
 
-# ── Git (optionnel) ──────────────────────────────────────────
+# ── Git ───────────────────────────────────────────────────────
 if $USE_GIT; then
-  info "Initialisation Git"
+  info "Git setup"
+  # If the folder is a clone of founder-stack → clean slate
+  if [ -d ".git" ]; then
+    REMOTE_URL="$(git remote get-url origin 2>/dev/null || echo '')"
+    if echo "$REMOTE_URL" | grep -q "founder-stack"; then
+      info "Detected founder-stack remote — resetting git history"
+      rm -rf .git
+    fi
+  fi
   git init -q
   git add .
-  git commit -q -m "chore: init projet $PROJECT_NAME (stack: $STACK)"
-  success "Dépôt Git initialisé"
+  git commit -q -m "chore: init $PROJECT_NAME (stack: $STACK)"
+  success "Git initialized with clean history"
+elif [ -d ".git" ]; then
+  # Not using git but folder is a founder-stack clone → remove remote
+  REMOTE_URL="$(git remote get-url origin 2>/dev/null || echo '')"
+  if echo "$REMOTE_URL" | grep -q "founder-stack"; then
+    git remote remove origin 2>/dev/null || true
+    info "Removed founder-stack remote"
+  fi
 fi
 
-# ── Done ─────────────────────────────────────────────────────
+# ── Done ──────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║  ✅ $PROJECT_NAME prêt !"
+echo "║  ✅ $PROJECT_NAME is ready!"
 echo "╠══════════════════════════════════════════════════════╣"
 echo "║"
-echo "║  cd ~/projects/$PROJECT_NAME"
-echo "║  claude"
+echo "║  You are already in the project folder."
+echo "║  Open Claude Code and tell it what you want to build."
 echo "║"
 
 case "$STACK" in
   a)
-    echo "║  → Ouvre index.html dans Chrome pour prévisualiser"
-    echo "║  → Dis à Claude : /feature \"<ce que tu veux\""
+    echo "║  → Open index.html in Chrome to preview"
+    echo "║  → Tell Claude: /feature \"<what you want>\""
     ;;
   b)
     echo "║  → pnpm install && pnpm dev"
-    echo "║  → Dis à Claude : /feature \"<ce que tu veux>\""
+    echo "║  → Tell Claude: /feature \"<what you want>\""
     ;;
   c-firebase|c-supabase)
-    echo "║  → Remplis .env.local avec tes clés"
+    echo "║  → Fill in .env.local with your keys"
     echo "║  → pnpm install && pnpm dev"
-    echo "║  → Dis à Claude : /feature \"<ce que tu veux>\""
+    echo "║  → Tell Claude: /feature \"<what you want>\""
     ;;
   d)
     echo "║  → pnpm install"
-    echo "║  → Dis à Claude : /feature \"<ce que tu veux>\""
-    echo "║  ⚠️  Mode avancé — assure-toi que PostgreSQL tourne"
+    echo "║  → Tell Claude: /feature \"<what you want>\""
+    echo "║  ⚠  Advanced mode — make sure PostgreSQL is running"
     ;;
 esac
 
