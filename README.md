@@ -63,40 +63,33 @@ Not sure which one? Run `/start` — Claude will ask you 6 simple questions and 
 
 ---
 
-## Quick start
+## Quick start — everything through Claude
 
-### Step 1 — One-time setup (install tools)
+The only prerequisite: **Claude Code** installed and authenticated.
 
-**WSL2 / Linux**
-```bash
-git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
-bash ~/founder-stack/scripts/setup-wsl.sh
-claude   # sign in with your Claude.ai account (Pro or Max)
-```
+### Step 1 — Install founder-stack (once)
 
-**Windows** — open PowerShell as Administrator:
-```powershell
-git clone https://github.com/avtplay/founder-stack.git $env:USERPROFILE\founder-stack
-Set-ExecutionPolicy Bypass -Scope Process
-& "$env:USERPROFILE\founder-stack\scripts\setup-windows.ps1"
-claude   # sign in with your Claude.ai account (Pro or Max)
-```
+Open Claude Code anywhere and say:
 
-This installs Node, pnpm, Claude Code, and a global config that teaches Claude how to bootstrap any new project automatically.
+> **"Here's the link: https://github.com/avtplay/founder-stack.git — install it"**
+
+Claude downloads the repo, detects your OS, and runs the setup automatically.
+When done, restart your terminal and run `claude` to authenticate if needed.
 
 ---
 
-### Step 2 — Every new project (same flow every time)
+### Step 2 — Every new project (same phrase every time)
 
-1. Create an empty folder and open Claude Code inside it
-2. Tell Claude:
+1. Create an empty folder, open Claude Code inside it
+2. Say:
 
-> **"Here's the link: https://github.com/avtplay/founder-stack.git — start my project"**
+> **"Start a founder-stack project here"**
 
-That's it. Claude downloads founder-stack, asks you a few questions about your idea, configures everything in your current folder, and guides you to your first feature.
+Claude asks you a few questions about your idea, picks the right stack, and configures everything in your current folder.
 
-- If `git` is available: uses `git clone`
-- If not: downloads and unzips automatically
+- Uses `~/founder-stack/` if step 1 was done — no download needed
+- Falls back to downloading automatically if needed
+- Works on Linux, WSL2, and Windows
 
 > **Windows note:** RTK (token compression) and SuperClaude (`/sc:` commands) are not available on native Windows. All AI agents, commands, and the full workflow work normally.
 
