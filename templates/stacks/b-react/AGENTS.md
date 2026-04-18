@@ -1,57 +1,57 @@
-# AGENTS.md — React App (locale / déployable)
+# AGENTS.md — React App (local / deployable)
 
 ## Stack
-- **Frontend** : React 18 + TypeScript + Vite + TailwindCSS
-- **State** : useState / useReducer (local), Zustand (global si besoin)
-- **Données** : localStorage (persistance légère) ou JSON statique
-- **Pas de backend** — tout tourne côté navigateur
+- **Frontend**: React 18 + TypeScript + Vite + TailwindCSS
+- **State**: useState / useReducer (local), Zustand (global if needed)
+- **Data**: localStorage (lightweight persistence) or static JSON
+- **No backend** — everything runs in the browser
 
-## Structure du projet
+## Project structure
 ```
-mon-projet/
+my-project/
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
-│   ├── pages/          ← une page = un dossier
-│   ├── components/     ← composants réutilisables
-│   ├── hooks/          ← logique réutilisable
-│   └── lib/            ← utilitaires
+│   ├── pages/          ← one folder per page
+│   ├── components/     ← reusable components
+│   ├── hooks/          ← reusable logic
+│   └── lib/            ← utilities
 ├── public/
 ├── index.html
 ├── package.json
 └── vite.config.ts
 ```
 
-## Commandes
+## Commands
 ```bash
-pnpm install      # installer les dépendances (première fois)
-pnpm dev          # démarrer en local → http://localhost:5173
-pnpm build        # compiler pour la production
-pnpm preview      # prévisualiser la version compilée
+pnpm install      # install dependencies (first time)
+pnpm dev          # start locally → http://localhost:5173
+pnpm build        # compile for production
+pnpm preview      # preview the compiled version
 ```
 
-## Règles pour Claude
-- TypeScript strict — pas de `any`
-- Composants fonctionnels uniquement (pas de class components)
-- TailwindCSS pour les styles — pas de CSS inline ni de fichiers .css séparés
-- Si besoin de routing → React Router v6
-- Si besoin de formulaires → React Hook Form
-- Données persistantes → localStorage avec un hook custom `useLocalStorage`
+## Rules for Claude
+- TypeScript strict — no `any`
+- Functional components only (no class components)
+- TailwindCSS for styles — no inline styles or separate .css files
+- Routing if needed → React Router v6
+- Forms if needed → React Hook Form
+- Persistent data → localStorage with a custom `useLocalStorage` hook
 
-## Déploiement
-**Vercel** (gratuit) :
-1. `pnpm build` → dossier `dist/` généré
-2. Va sur vercel.com → "Import project" → connecte ton repo GitHub
-3. Vercel déploie automatiquement à chaque push
+## Deployment
+**Vercel** (free):
+1. `pnpm build` → `dist/` folder generated
+2. Go to vercel.com → "Import project" → connect your GitHub repo
+3. Vercel deploys automatically on every push
 
-**Alternative Netlify** :
+**Netlify alternative**:
 1. `pnpm build`
-2. Glisse `dist/` sur netlify.com/drop
+2. Drag `dist/` onto netlify.com/drop
 
-## Limites de cette stack
-- Pas de comptes utilisateurs natifs
-- Données stockées dans le navigateur (perdues si autre appareil)
-- Pas adapté si plusieurs utilisateurs doivent partager des données
+## Limits of this stack
+- No native user accounts
+- Data stored in the browser (lost on another device)
+- Not suitable if multiple users need to share data
 
 ## Agent Checkpoints
 Agents MUST pause and await confirmation before:
@@ -60,7 +60,7 @@ Agents MUST pause and await confirmation before:
 3. Deleting files
 
 ## Do NOT
-- Utiliser `any` en TypeScript
-- Écrire de CSS inline (utiliser Tailwind)
-- Utiliser des class components React
-- Hard-coder des valeurs de config — utiliser des variables d'environnement
+- Use `any` in TypeScript
+- Write inline CSS (use Tailwind)
+- Use React class components
+- Hard-code config values — use environment variables

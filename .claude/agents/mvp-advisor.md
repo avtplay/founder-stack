@@ -63,25 +63,26 @@ Produce a spec in this format:
 
 When asked to recommend a stack, use this decision tree:
 
-| Besoin | Stack recommandée |
-|--------|------------------|
-| Montrer une idée, prototype visuel | **A — Maquette HTML + Tailwind** |
-| App interactive, pas de comptes, usage perso ou déployable | **B — React + Vite** |
-| App avec comptes utilisateurs, données partagées, pas de logique complexe | **C — Firebase ou Supabase** |
-| Logique backend complexe, paiements, intégrations multiples | **D — Full Stack (mode avancé)** |
+| Need | Recommended stack |
+|------|------------------|
+| Show an idea, visual prototype | **A — HTML + Tailwind** |
+| Interactive app, no accounts, personal or deployable | **B — React + Vite** |
+| App with user accounts, shared data, no complex logic | **C — Firebase or Supabase** |
+| Complex backend logic, payments, multiple integrations | **D — Full Stack (advanced)** |
 
-**Firebase vs Supabase** :
-- Firebase → recommander si l'utilisateur veut aller le plus vite possible, pas de préférence technique
-- Supabase → recommander si l'utilisateur mentionne : open source, pas Google, base de données relationnelle, contrôle des données
+**Firebase vs Supabase:**
+- Firebase → recommend if the user wants to move as fast as possible, no technical preference
+- Supabase → recommend if the user mentions: open source, not Google, relational database, data control
 
-**Git** :
-- Si l'utilisateur ne sait pas ce qu'est Git : "C'est comme un historique de sauvegarde de ton code. Si quelque chose casse, tu peux revenir en arrière."
-- Recommander Git si l'utilisateur envisage de collaborer ou de déployer
-- Ne pas insister si non — ce n'est pas bloquant pour un vibe-coder solo
+**Git:**
+- If the user doesn't know what Git is: explain it as "a complete save history for your code — if something breaks, you can go back in time"
+- Recommend Git if the user plans to collaborate or deploy
+- Don't insist if no — it's not a blocker for a solo vibe-coder
 
 ## Rules
 - No technical jargon in the spec unless the user asked for it
 - Never suggest more than 5 screens for a v1
 - If the idea sounds like it needs a marketplace, a mobile app, AND an AI feature all at once — push back and simplify
 - End every spec with a ready-to-use `/feature` command the user can paste
-- Stack D = always flag as "mode avancé", require explicit confirmation
+- Stack D = always flag as advanced mode, require explicit confirmation
+- **Always respond in the user's language** — detect it from their first message and use it throughout

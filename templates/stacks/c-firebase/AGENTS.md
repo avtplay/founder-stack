@@ -1,34 +1,34 @@
 # AGENTS.md — React + Firebase
 
 ## Stack
-- **Frontend** : React 18 + TypeScript + Vite + TailwindCSS
-- **Auth** : Firebase Authentication (email/password + Google)
-- **Base de données** : Cloud Firestore (NoSQL temps réel)
-- **Stockage fichiers** : Firebase Storage
-- **Hébergement** : Firebase Hosting
-- **SDK** : firebase@10+
+- **Frontend**: React 18 + TypeScript + Vite + TailwindCSS
+- **Auth**: Firebase Authentication (email/password + Google)
+- **Database**: Cloud Firestore (NoSQL real-time)
+- **File storage**: Firebase Storage
+- **Hosting**: Firebase Hosting
+- **SDK**: firebase@10+
 
-## Structure du projet
+## Project structure
 ```
-mon-projet/
+my-project/
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
 │   ├── pages/
 │   ├── components/
 │   ├── hooks/
-│   │   ├── useAuth.ts        ← hook auth Firebase
-│   │   └── useFirestore.ts   ← hook données Firestore
+│   │   ├── useAuth.ts        ← Firebase auth hook
+│   │   └── useFirestore.ts   ← Firestore data hook
 │   ├── lib/
-│   │   └── firebase.ts       ← initialisation Firebase
+│   │   └── firebase.ts       ← Firebase initialization
 │   └── types/
-├── .env.local                ← clés Firebase (jamais committé)
-├── .env.example              ← template des variables
+├── .env.local                ← Firebase keys (never committed)
+├── .env.example              ← variable template
 ├── package.json
 └── vite.config.ts
 ```
 
-## Variables d'environnement requises
+## Required environment variables
 ```bash
 # .env.local
 VITE_FIREBASE_API_KEY=
@@ -39,46 +39,46 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 ```
 
-## Commandes
+## Commands
 ```bash
-pnpm install          # installer les dépendances
-pnpm dev              # démarrer en local → http://localhost:5173
-pnpm build            # compiler
-firebase deploy       # déployer sur Firebase Hosting
+pnpm install          # install dependencies
+pnpm dev              # start locally → http://localhost:5173
+pnpm build            # compile
+firebase deploy       # deploy to Firebase Hosting
 ```
 
-## Règles pour Claude
-- Toujours initialiser Firebase dans `src/lib/firebase.ts` — ne jamais répliquer l'init ailleurs
-- Accès Firestore via hooks custom (`useCollection`, `useDocument`)
-- Auth via un contexte React (`AuthContext`) + hook `useAuth`
-- Règles de sécurité Firestore : toujours vérifier `request.auth != null` pour les données privées
-- TypeScript strict — pas de `any`
-- Jamais exposer les clés Firebase dans le code — uniquement via `import.meta.env.VITE_*`
+## Rules for Claude
+- Always initialize Firebase in `src/lib/firebase.ts` — never duplicate the init elsewhere
+- Access Firestore via custom hooks (`useCollection`, `useDocument`)
+- Auth via a React context (`AuthContext`) + `useAuth` hook
+- Firestore security rules: always check `request.auth != null` for private data
+- TypeScript strict — no `any`
+- Never expose Firebase keys in code — only via `import.meta.env.VITE_*`
 
-## Structure Firestore recommandée
+## Recommended Firestore structure
 ```
 users/{userId}
-  → profil utilisateur
+  → user profile
 
 <collection>/{docId}
-  → ownerId: string (référence vers users)
+  → ownerId: string (reference to users)
   → createdAt: timestamp
-  → ...données métier
+  → ...business data
 ```
 
-## Déploiement
+## Deployment
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase init hosting    # choisir dist/ comme dossier public
+firebase init hosting    # choose dist/ as public folder
 pnpm build
 firebase deploy
 ```
 
-## Limites de cette stack
-- Vendor lock-in Google (difficile à migrer plus tard)
-- Firestore = NoSQL : pas adapté aux requêtes complexes (joins, agrégations)
-- Coûts peuvent augmenter avec le trafic (surveiller les quotas)
+## Limits of this stack
+- Google vendor lock-in (hard to migrate later)
+- Firestore = NoSQL: not suited for complex queries (joins, aggregations)
+- Costs can increase with traffic (monitor quotas)
 
 ## Agent Checkpoints
 Agents MUST pause and await confirmation before:
@@ -89,7 +89,7 @@ Agents MUST pause and await confirmation before:
 5. Deleting files
 
 ## Do NOT
-- Mettre les clés Firebase dans le code source
-- Utiliser `allow read, write: if true` en production (règles de sécurité ouvertes)
-- Utiliser `any` en TypeScript
-- Écrire de CSS inline (utiliser Tailwind)
+- Put Firebase keys in source code
+- Use `allow read, write: if true` in production (open security rules)
+- Use `any` in TypeScript
+- Write inline CSS (use Tailwind)

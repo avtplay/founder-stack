@@ -1,45 +1,45 @@
-# AGENTS.md — Full Stack (Mode Avancé)
+# AGENTS.md — Full Stack (Advanced Mode)
 
-> ⚠️ **Mode avancé** — Cette stack est recommandée uniquement si tu as besoin de logique backend complexe, de contrôle total sur ton infrastructure, ou si tu travailles avec un développeur. Elle demande plus de configuration et de maintenance qu'un projet Firebase/Supabase.
+> ⚠️ **Advanced mode** — This stack is recommended only if you need complex backend logic, full control over your infrastructure, or if you are working with a developer. It requires more configuration and maintenance than a Firebase/Supabase project.
 
 ## Stack
-- **Frontend** : React + TypeScript + Vite + TailwindCSS + React Query
-- **Backend** : Node.js + Fastify
-- **DB** : PostgreSQL + Prisma ORM
-- **Auth** : JWT (access + refresh tokens)
-- **CI/CD** : GitHub Actions
-- **AI Orchestration** : Claude Code subagents + LangGraph (flows complexes)
+- **Frontend**: React + TypeScript + Vite + TailwindCSS + React Query
+- **Backend**: Node.js + Fastify
+- **DB**: PostgreSQL + Prisma ORM
+- **Auth**: JWT (access + refresh tokens)
+- **CI/CD**: GitHub Actions
+- **AI Orchestration**: Claude Code subagents + LangGraph (complex flows)
 
-## Project Structure
+## Project structure
 ```
-mon-projet/
+my-project/
 ├── apps/
 │   ├── web/           → React frontend (Vite)
 │   ├── api/           → Node/Fastify backend
 │   └── workers/       → Background jobs / agents
 ├── packages/
-│   ├── types/         → Types TypeScript partagés
+│   ├── types/         → Shared TypeScript types
 │   ├── db/            → Prisma schema + client
-│   └── config/        → Config partagée
+│   └── config/        → Shared config
 ├── .github/
 │   └── workflows/     → CI/CD GitHub Actions
 └── .claude/
-    ├── agents/        → Sous-agents spécialisés
-    └── commands/      → Commandes slash
+    ├── agents/        → Specialized subagents
+    └── commands/      → Slash commands
 ```
 
-## Commandes
+## Commands
 ```bash
-pnpm install          # installer toutes les dépendances
-pnpm dev              # démarrer tous les services
-pnpm build            # compiler tout
-pnpm test             # lancer tous les tests
+pnpm install          # install all dependencies
+pnpm dev              # start all services
+pnpm build            # build everything
+pnpm test             # run all tests
 pnpm lint             # eslint + tsc --noEmit
 pnpm db:migrate       # prisma migrate dev
-pnpm db:studio        # prisma studio (interface visuelle DB)
+pnpm db:studio        # prisma studio (visual DB interface)
 ```
 
-## Variables d'environnement requises
+## Required environment variables
 ```bash
 # .env.local
 DATABASE_URL=postgresql://devuser:devpass@localhost:5432/devdb
@@ -50,22 +50,22 @@ PORT=3000
 VITE_API_URL=http://localhost:3000
 ```
 
-## Sous-agents disponibles
-| Agent | Déclencher |
-|-------|-----------|
-| security-reviewer | auth / paiements / données sensibles |
-| db-architect | schéma DB / migrations |
-| test-writer | couverture de tests |
-| frontend-specialist | composants React complexes |
-| mvp-advisor | nouvelle feature / arbitrage produit |
+## Available subagents
+| Agent | Trigger |
+|-------|---------|
+| security-reviewer | auth / payments / sensitive data |
+| db-architect | DB schema / migrations |
+| test-writer | test coverage |
+| frontend-specialist | complex React components |
+| mvp-advisor | new feature / product decisions |
 
-## Règles
-- TypeScript strict — pas de `any`
-- Tests requis pour toute logique métier (Vitest)
-- Commits conventionnels : feat/fix/chore/docs/refactor
-- Feature branches depuis `main`, PRs obligatoires
-- Variables d'env dans `.env.local` — jamais committées
-- Pas de force push sur main
+## Rules
+- TypeScript strict — no `any`
+- Tests required for all business logic (Vitest)
+- Conventional commits: feat/fix/chore/docs/refactor
+- Feature branches from `main`, PRs required
+- Env vars in `.env.local` — never committed
+- No force push to main
 
 ## Agent Checkpoints
 Agents MUST pause and await confirmation before:
@@ -76,7 +76,7 @@ Agents MUST pause and await confirmation before:
 5. Deleting files
 
 ## Do NOT
-- Hard-coder des valeurs de config — utiliser les variables d'env
-- Utiliser des class components React
-- Utiliser `any` en TypeScript
-- Écrire de CSS inline (utiliser Tailwind)
+- Hard-code config values — use environment variables
+- Use React class components
+- Use `any` in TypeScript
+- Write inline CSS (use Tailwind)

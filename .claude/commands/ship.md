@@ -1,203 +1,203 @@
-# /ship — Mettre en ligne
+# /ship — Deploy to production
 
-Déploie le projet en production, étape par étape, selon la stack utilisée.
+Guides the project deployment step by step, based on the stack in use.
 
 ## Usage
 ```
-/ship                   # déploiement complet guidé
-/ship --check           # vérification pré-déploiement uniquement
-/ship --domain          # configurer un nom de domaine après déploiement
+/ship                   # full guided deployment
+/ship --check           # pre-deployment checklist only
+/ship --domain          # configure a custom domain after deployment
 ```
 
 ---
 
-## Étape 1 — Détection de la stack
+## Step 1 — Stack detection
 
-Lis `AGENTS.md` pour identifier la stack du projet.
+Read `AGENTS.md` to identify the project's stack.
 
-| Ce que tu trouves dans AGENTS.md | Stack |
-|----------------------------------|-------|
-| "HTML5 + TailwindCSS (CDN)" | A — Maquette |
-| "React 18 + TypeScript + Vite" sans Firebase/Supabase | B — React |
+| What you find in AGENTS.md | Stack |
+|----------------------------|-------|
+| "HTML5 + TailwindCSS (CDN)" | A — HTML mockup |
+| "React 18 + TypeScript + Vite" without Firebase/Supabase | B — React |
 | "Firebase" | C — Firebase |
 | "Supabase" | C — Supabase |
 | "Node.js + Fastify" | D — Full Stack |
 
 ---
 
-## Étape 2 — Checklist pré-déploiement
+## Step 2 — Pre-deployment checklist
 
-Vérifie ces points **avant** de déployer. Bloque si un point critique échoue.
+Check these points **before** deploying. Block if a critical item fails.
 
-**Pour toutes les stacks :**
-- [ ] Aucune clé API, mot de passe ou secret dans le code source (grep `.env.local`, pas dans les fichiers committés)
-- [ ] Le projet s'affiche correctement en local
+**All stacks:**
+- [ ] No API keys, passwords, or secrets in source code (check `.env.local` is not committed)
+- [ ] Project displays correctly in local
 
-**Stack B, C, D uniquement :**
-- [ ] `pnpm build` passe sans erreur
-- [ ] Pas d'erreurs TypeScript (`pnpm lint`)
+**Stack B, C, D only:**
+- [ ] `pnpm build` passes without errors
+- [ ] No TypeScript errors (`pnpm lint`)
 
-**Stack C (Firebase/Supabase) :**
-- [ ] `.env.local` rempli avec de vraies clés (pas les valeurs d'exemple)
-- [ ] L'auth fonctionne en local
-- [ ] Les données s'affichent en local
+**Stack C (Firebase/Supabase):**
+- [ ] `.env.local` filled with real keys (not example values)
+- [ ] Auth works locally
+- [ ] Data displays correctly locally
 
-**Stack D :**
-- [ ] Les migrations DB sont à jour
-- [ ] Les variables d'environnement de production sont prêtes
+**Stack D:**
+- [ ] DB migrations are up to date
+- [ ] Production environment variables are ready
 
-**⚠️ CHECKPOINT** : Présenter le résultat de la checklist → attendre "go" avant de continuer
+**⚠️ CHECKPOINT**: Present checklist results → wait for "go" before continuing
 
-Si un point échoue → corriger avec l'utilisateur avant de continuer. Ne jamais déployer un projet cassé.
-
----
-
-## Étape 3 — Déploiement par stack
+If any item fails → fix it with the user before continuing. Never deploy a broken project.
 
 ---
 
-### Stack A — Maquette HTML → Netlify Drop
+## Step 3 — Deployment by stack
 
-**Aucun compte requis pour un déploiement rapide.**
+---
 
-1. "Ouvre [netlify.com/drop](https://netlify.com/drop) dans ton navigateur"
-2. "Glisse-dépose **le dossier entier** de ton projet sur la zone indiquée"
-3. "Netlify génère une URL publique en 30 secondes — copie-la"
+### Stack A — HTML mockup → Netlify Drop
 
-✅ C'est tout. Ton site est en ligne.
+**No account required for a quick deployment.**
 
-**Si tu veux une URL permanente (garde le même lien) :**
-1. "Crée un compte gratuit sur netlify.com"
-2. "Dans ton tableau de bord → 'Add new site' → 'Deploy manually'"
-3. "Glisse-dépose à nouveau — l'URL ne changera plus"
+1. "Open [netlify.com/drop](https://netlify.com/drop) in your browser"
+2. "Drag and drop **the entire project folder** onto the upload zone"
+3. "Netlify generates a public URL in 30 seconds — copy it"
+
+✅ That's it. Your site is live.
+
+**If you want a permanent URL (same link every time):**
+1. "Create a free account at netlify.com"
+2. "In your dashboard → 'Add new site' → 'Deploy manually'"
+3. "Drag and drop again — the URL will never change"
 
 ---
 
 ### Stack B — React + Vite → Vercel
 
-**Prérequis : un compte GitHub avec le code dedans.**
+**Prerequisite: a GitHub account with your code pushed to it.**
 
-Si le code n'est pas encore sur GitHub :
-1. "Va sur [github.com](https://github.com) → 'New repository'"
-2. "Donne-lui le même nom que ton projet, laisse tout par défaut"
-3. "Copie les commandes affichées ('…or push an existing repository') et exécute-les dans le terminal"
+If the code is not on GitHub yet:
+1. "Go to [github.com](https://github.com) → 'New repository'"
+2. "Give it the same name as your project, leave everything as default"
+3. "Copy the commands shown ('…or push an existing repository') and run them in the terminal"
 
-Déploiement Vercel :
-1. "Va sur [vercel.com](https://vercel.com) et connecte-toi avec GitHub"
-2. "Clique sur 'Add New Project' → sélectionne ton repo"
-3. "Vercel détecte Vite automatiquement — clique 'Deploy' sans rien changer"
-4. "Ton site est en ligne sur une URL `*.vercel.app`"
+Vercel deployment:
+1. "Go to [vercel.com](https://vercel.com) and sign in with GitHub"
+2. "Click 'Add New Project' → select your repo"
+3. "Vercel detects Vite automatically — click 'Deploy' without changing anything"
+4. "Your site is live at a `*.vercel.app` URL"
 
-**À chaque fois que tu modifies le code :**
+**Every time you update the code:**
 ```bash
 git add .
 git commit -m "feat: <description>"
 git push
 ```
-→ Vercel redéploie automatiquement.
+→ Vercel redeploys automatically.
 
 ---
 
 ### Stack C — Firebase → Firebase Hosting
 
-**Prérequis : Firebase CLI installé et projet Firebase créé.**
+**Prerequisite: Firebase CLI installed and Firebase project created.**
 
-Vérifier/installer Firebase CLI :
+Check/install Firebase CLI:
 ```bash
 npm install -g firebase-tools
 firebase login
 ```
 
-Si pas encore initialisé dans le projet :
+If not yet initialized in the project:
 ```bash
 firebase init hosting
-# → "Use an existing project" → sélectionner ton projet
+# → "Use an existing project" → select your project
 # → "What do you want to use as your public directory?" → dist
 # → "Configure as a single-page app?" → Yes
-# → "Set up automatic builds with GitHub?" → Non pour l'instant
+# → "Set up automatic builds with GitHub?" → No for now
 ```
 
-Déployer :
+Deploy:
 ```bash
 pnpm build
 firebase deploy --only hosting
 ```
 
-L'URL finale sera `https://<ton-projet>.web.app`
+Final URL: `https://<your-project>.web.app`
 
-**⚠️ CHECKPOINT** : Confirmer l'URL de production avant de déployer
+**⚠️ CHECKPOINT**: Confirm the production URL before deploying
 
 ---
 
 ### Stack C — Supabase → Vercel + Supabase Cloud
 
-**Le backend (Supabase) est déjà en ligne — seul le frontend doit être déployé.**
+**The backend (Supabase) is already online — only the frontend needs to be deployed.**
 
-Si le code n'est pas encore sur GitHub → même procédure que Stack B.
+If the code is not on GitHub yet → same procedure as Stack B.
 
-Déploiement Vercel :
-1. "Va sur [vercel.com](https://vercel.com) → 'Add New Project' → sélectionne ton repo"
-2. "Avant de cliquer Deploy : va dans 'Environment Variables'"
-3. "Ajoute tes deux variables :"
-   - `VITE_SUPABASE_URL` → ton URL Supabase
-   - `VITE_SUPABASE_ANON_KEY` → ta clé anon
-4. "Clique 'Deploy'"
+Vercel deployment:
+1. "Go to [vercel.com](https://vercel.com) → 'Add New Project' → select your repo"
+2. "Before clicking Deploy: go to 'Environment Variables'"
+3. "Add your two variables:"
+   - `VITE_SUPABASE_URL` → your Supabase URL
+   - `VITE_SUPABASE_ANON_KEY` → your anon key
+4. "Click 'Deploy'"
 
-**⚠️ CHECKPOINT** : Vérifier que les variables d'env sont bien saisies avant de déployer
+**⚠️ CHECKPOINT**: Verify env variables are entered correctly before deploying
 
-Après déploiement :
-- "Va sur ton URL Vercel et teste la connexion / l'inscription"
-- "Si ça ne fonctionne pas → vérifie dans Supabase que le domaine Vercel est autorisé : Authentication → URL Configuration → ajoute l'URL Vercel dans 'Site URL'"
+After deployment:
+- "Go to your Vercel URL and test login / sign up"
+- "If it doesn't work → check in Supabase that the Vercel domain is allowed: Authentication → URL Configuration → add the Vercel URL to 'Site URL'"
 
 ---
 
 ### Stack D — Full Stack → Railway
 
-> ⚠️ Mode avancé — cette étape déploie le frontend ET le backend ET la base de données.
+> ⚠️ Advanced mode — this step deploys the frontend, backend, AND database.
 
-**Option recommandée : Railway** (gratuit jusqu'à 5$/mois de ressources)
+**Recommended option: Railway** (free up to ~$5/month of resources)
 
-Prérequis : code sur GitHub.
+Prerequisite: code on GitHub.
 
-1. "Va sur [railway.app](https://railway.app) et connecte-toi avec GitHub"
-2. "Clique 'New Project' → 'Deploy from GitHub repo'"
-3. "Railway détecte le monorepo — crée 3 services : api, web, postgres"
-4. "Configure les variables d'environnement pour chaque service :"
-   - Service `api` : `DATABASE_URL` (fournie par Railway automatiquement), `JWT_SECRET`, `JWT_REFRESH_SECRET`, `NODE_ENV=production`
-   - Service `web` : `VITE_API_URL` = URL du service api Railway
-5. "Lance les migrations : dans le terminal Railway du service api → `pnpm db:migrate`"
+1. "Go to [railway.app](https://railway.app) and sign in with GitHub"
+2. "Click 'New Project' → 'Deploy from GitHub repo'"
+3. "Railway detects the monorepo — create 3 services: api, web, postgres"
+4. "Configure environment variables for each service:"
+   - `api` service: `DATABASE_URL` (provided by Railway automatically), `JWT_SECRET`, `JWT_REFRESH_SECRET`, `NODE_ENV=production`
+   - `web` service: `VITE_API_URL` = Railway api service URL
+5. "Run migrations: in the Railway terminal of the api service → `pnpm db:migrate`"
 
-**⚠️ CHECKPOINT** : Vérifier chaque variable d'env avec l'utilisateur avant de déployer
+**⚠️ CHECKPOINT**: Review each env variable with the user before deploying
 
-Après déploiement :
-- Tester l'URL du frontend
-- Tester une action qui écrit en base de données
-- Vérifier les logs Railway si erreur
-
----
-
-## Étape 4 — Domaine personnalisé (si `--domain` ou si demandé)
-
-**Vercel :**
-1. Dans le projet Vercel → 'Settings' → 'Domains' → ajouter `mondomaine.com`
-2. Vercel affiche 2 enregistrements DNS à copier
-3. "Va chez ton registrar (OVH, Namecheap, etc.) → DNS → ajoute les deux enregistrements"
-4. Propagation : 5 minutes à 48h
-
-**Firebase Hosting :**
-1. Console Firebase → Hosting → 'Add custom domain'
-2. Même principe : copier les enregistrements DNS
-
-**Railway :**
-1. Service web → Settings → Networking → 'Add custom domain'
-2. Copier l'enregistrement CNAME chez ton registrar
+After deployment:
+- Test the frontend URL
+- Test an action that writes to the database
+- Check Railway logs if there's an error
 
 ---
 
-## Règles
+## Step 4 — Custom domain (if `--domain` or if requested)
 
-- Ne jamais déployer sans avoir passé la checklist
-- Ne jamais mettre de vraies clés dans le code — toujours via les variables d'environnement de la plateforme
-- Si l'utilisateur n'a pas de compte sur la plateforme → le guider pour en créer un avant de continuer
-- Stack D → toujours confirmer que l'utilisateur comprend que c'est plus complexe à maintenir
-- Si un déploiement échoue → lire les logs, expliquer l'erreur en langage simple, proposer une correction
+**Vercel:**
+1. Project → 'Settings' → 'Domains' → add `yourdomain.com`
+2. Vercel shows 2 DNS records to copy
+3. "Go to your registrar (OVH, Namecheap, etc.) → DNS → add both records"
+4. Propagation: 5 minutes to 48h
+
+**Firebase Hosting:**
+1. Firebase Console → Hosting → 'Add custom domain'
+2. Same principle: copy DNS records to your registrar
+
+**Railway:**
+1. Web service → Settings → Networking → 'Add custom domain'
+2. Copy the CNAME record to your registrar
+
+---
+
+## Rules
+
+- Never deploy without passing the checklist
+- Never put real keys in the code — always use the platform's environment variables
+- If the user doesn't have an account on the platform → guide them through creating one before continuing
+- Stack D → always confirm the user understands it's more complex to maintain
+- If a deployment fails → read the logs, explain the error in plain language, suggest a fix

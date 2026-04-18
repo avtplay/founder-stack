@@ -4,9 +4,9 @@ Transforms a business idea (even vague) into a concrete spec, then into a first 
 
 ## Usage
 ```
-/spec "je veux créer une app pour réserver des cours de yoga"
-/spec "une plateforme où des freelances proposent leurs services"
-/spec "un outil qui envoie des rappels automatiques à mes clients"
+/spec "an app to book yoga classes"
+/spec "a platform where freelancers offer their services"
+/spec "a tool that sends automatic reminders to my clients"
 ```
 
 ## What happens
@@ -27,7 +27,7 @@ The subagent produces:
 - Data the app needs to remember (plain English)
 - What is explicitly cut from v1
 
-**⚠️ CHECKPOINT**: Present spec → await "c'est bon" or "go" before continuing
+**⚠️ CHECKPOINT**: Present spec → await confirmation ("ok", "go", "looks good") before continuing
 
 ### Phase 3 — First feature
 From the spec, derive the single best first feature to build.

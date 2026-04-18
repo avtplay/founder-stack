@@ -1,146 +1,147 @@
-# /start — Démarrer un nouveau projet
+# /start — Start a new project
 
-Point d'entrée universel. Pose les bonnes questions, choisit la stack adaptée, configure tout.
+Universal entry point. Asks the right questions, picks the right stack, sets everything up.
 
-## Déclencheurs
-- "je veux démarrer mon projet"
-- "commencer un nouveau projet"
-- "je veux créer une app / un site"
+## Triggers
+- "I want to start my project"
+- "start a new project"
+- "I want to build an app / a website"
+- "je veux démarrer mon projet" / "commencer un projet"
 - `/start`
 
 ---
 
-## Flux complet
+## Full flow
 
-### Étape 1 — L'idée
+### Step 1 — The idea
 
-Utilise l'agent `mvp-advisor` pour :
-1. Demander une description en 2-3 phrases
-2. Produire une spec MVP (core loop, pages, données, ce qu'on coupe)
+Use the `mvp-advisor` agent to:
+1. Ask for a 2-3 sentence description of the project
+2. Produce an MVP spec (core loop, pages, data, what to cut)
 
-**⚠️ CHECKPOINT 1** : Présenter la spec → attendre "c'est bon" avant de continuer
-
----
-
-### Étape 2 — Questions stack (une par une, dans l'ordre)
-
-Pose chaque question séparément. Attends la réponse avant de passer à la suivante.
-Arrête-toi dès que tu peux déterminer la stack.
+**⚠️ CHECKPOINT 1**: Present the spec → wait for confirmation before continuing
 
 ---
 
-**Q1 — Qui va l'utiliser ?**
-> "Ton projet, c'est pour toi seul, ou d'autres personnes vont l'utiliser ?"
+### Step 2 — Stack questions (one at a time, in order)
+
+Ask each question separately. Wait for the answer before moving to the next.
+Stop as soon as you can determine the stack.
 
 ---
 
-**Q2 — Maquette ou fonctionnel ?**
-> "Tu veux juste montrer l'idée (comme une maquette visuelle), ou tu veux que ça fonctionne vraiment ?"
-
-→ Si maquette : **Stack A** déterminée, passer à Q6 (git)
+**Q1 — Who will use it?**
+> "Is this project just for you, or will other people use it?"
 
 ---
 
-**Q3 — Comptes utilisateurs ?** *(seulement si fonctionnel)*
-> "Les gens devront-ils créer un compte / se connecter pour utiliser ton app ?"
+**Q2 — Prototype or real product?**
+> "Do you want to show the idea visually (like a mockup), or do you want it to actually work?"
 
-→ Si non ET usage perso : **Stack B** déterminée, passer à Q6 (git)
-→ Si non ET autres utilisateurs : **Stack B** déterminée (déployable), passer à Q6
-
----
-
-**Q4 — Logique complexe ?** *(seulement si comptes = oui)*
-> "Est-ce que ton app doit gérer des choses comme des paiements, des calculs avancés, ou se connecter à d'autres services externes ?"
-
-→ Si non : **Stack C** → poser Q5 (Firebase vs Supabase)
-→ Si oui : **Stack D** (mode avancé) → passer à Q6
+→ If mockup: **Stack A** decided, skip to Q6 (git)
 
 ---
 
-**Q5 — Firebase ou Supabase ?** *(seulement si Stack C)*
-> "Pour gérer les comptes et stocker les données, deux options s'offrent à toi :
+**Q3 — User accounts?** *(only if real product)*
+> "Will people need to create an account / log in to use your app?"
+
+→ If no: **Stack B** decided, skip to Q6
+
+---
+
+**Q4 — Complex logic?** *(only if accounts = yes)*
+> "Does your app need to handle things like payments, advanced calculations, or connect to other external services?"
+
+→ If no: **Stack C** → ask Q5 (Firebase vs Supabase)
+→ If yes: **Stack D** (advanced mode) → skip to Q6
+
+---
+
+**Q5 — Firebase or Supabase?** *(only if Stack C)*
+> "To manage accounts and store data, you have two options:
 >
-> - **Firebase** (par Google) — très facile à démarrer, tout est géré automatiquement, gratuit jusqu'à un certain usage. Idéal si tu veux aller vite.
-> - **Supabase** — similaire à Firebase mais open source (pas dépendant de Google), base de données plus puissante, peut tourner sur ton ordi. Idéal si tu veux plus de contrôle.
+> - **Firebase** (by Google) — very easy to get started, everything managed automatically, free up to a certain usage. Best if you want to move fast.
+> - **Supabase** — similar to Firebase but open source (not tied to Google), more powerful database, can run locally. Best if you want more control.
 >
-> Tu as une préférence ? Sinon, je te recommande **Firebase** pour commencer."
+> Do you have a preference? If not, I recommend **Firebase** to start."
 
 ---
 
-**Q6 — Git ?** *(toujours poser cette question)*
-> "Est-ce que tu connais Git ?
+**Q6 — Git?** *(always ask)*
+> "Do you know what Git is?
 >
-> C'est un outil qui sauvegarde l'historique complet de ton code — comme un 'Ctrl+Z' illimité dans le temps, et ça permet de collaborer avec d'autres développeurs plus tard.
+> It's a tool that saves the full history of your code — like unlimited Ctrl+Z over time, and it lets you collaborate with other developers later.
 >
-> Tu veux l'utiliser ?"
+> Do you want to use it?"
 
-Si l'utilisateur ne sait pas ce que c'est : expliquer en 1 phrase supplémentaire et laisser choisir. Ne pas insister si non.
+If the user doesn't know what Git is: give one extra sentence of explanation and let them choose. Don't insist if no.
 
 ---
 
-### Étape 3 — Récapitulatif
+### Step 3 — Summary
 
-Présente le résumé avant de lancer quoi que ce soit :
+Present this before running anything:
 
 ```
-## Résumé de ton projet
+## Your project summary
 
-**Nom** : <à demander si pas encore défini>
-**Idée** : <spec en une phrase>
+**Name**: <ask if not yet defined>
+**Idea**: <spec in one sentence>
 
-**Stack choisie** : <lettre> — <nom>
-**Pourquoi** : <1 phrase en langage simple, sans jargon>
+**Chosen stack**: <letter> — <name>
+**Why**: <1 sentence in plain language, no jargon>
 
-**Ce que ça veut dire concrètement** :
+**What this means in practice**:
 - <point 1>
 - <point 2>
 - <point 3>
 
-**Git** : <oui / non>
+**Git**: <yes / no>
 ```
 
-**⚠️ CHECKPOINT 2** : Attendre confirmation ("c'est bon", "go", "oui") avant de lancer le setup
+**⚠️ CHECKPOINT 2**: Wait for confirmation ("ok", "go", "yes", "looks good") before running setup
 
 ---
 
-### Étape 4 — Setup
+### Step 4 — Setup
 
-#### Si Stack C (Firebase ou Supabase) : guide externe d'abord
+#### If Stack C (Firebase or Supabase): external guide first
 
-Avant de lancer le script, guide l'utilisateur étape par étape pour créer son projet sur le service choisi. Ne pas lancer le script tant que l'utilisateur n'a pas ses clés/credentials.
+Before running the script, guide the user step by step to create their project on the chosen service. Do not run the script until the user has their credentials.
 
-**Firebase :**
-1. "Va sur [console.firebase.google.com](https://console.firebase.google.com)"
-2. "Clique sur 'Créer un projet', donne-lui le même nom que ton projet"
-3. "Désactive Google Analytics (pas nécessaire pour l'instant)"
-4. "Dans le menu à gauche → 'Authentification' → 'Commencer' → active 'Email/Mot de passe'"
-5. "Dans 'Firestore Database' → 'Créer une base de données' → mode test"
-6. "Dans les paramètres du projet ⚙️ → 'Ajouter une app web' → copie les clés firebaseConfig"
-7. "Donne-moi les clés, je les mets en place"
+**Firebase:**
+1. "Go to [console.firebase.google.com](https://console.firebase.google.com)"
+2. "Click 'Create a project', give it the same name as your project"
+3. "Disable Google Analytics (not needed for now)"
+4. "In the left menu → 'Authentication' → 'Get started' → enable 'Email/Password'"
+5. "In 'Firestore Database' → 'Create database' → test mode"
+6. "In project settings ⚙️ → 'Add app' → Web → copy the firebaseConfig keys"
+7. "Give me the keys and I'll set them up"
 
-**Supabase :**
-1. "Va sur [supabase.com](https://supabase.com) et crée un compte gratuit"
-2. "Clique sur 'New project', donne-lui le même nom que ton projet"
-3. "Note bien ton mot de passe de base de données"
-4. "Dans 'Project Settings' → 'API' → copie l'URL et la clé 'anon public'"
-5. "Donne-moi ces deux valeurs, je les mets en place"
+**Supabase:**
+1. "Go to [supabase.com](https://supabase.com) and create a free account"
+2. "Click 'New project', give it the same name as your project"
+3. "Save your database password somewhere safe"
+4. "In 'Project Settings' → 'API' → copy the URL and the 'anon public' key"
+5. "Give me those two values and I'll set them up"
 
-#### Lancement du script
+#### Run the script
 
 ```bash
-bash scripts/bootstrap-project.sh <nom-projet> --stack <a|b|c-firebase|c-supabase|d> [--git]
+bash scripts/bootstrap-project.sh <project-name> --stack <a|b|c-firebase|c-supabase|d> [--git]
 ```
 
-#### Après le script
+#### After the script
 
-- Indique les prochaines étapes concrètes selon la stack
-- Propose de lancer `/spec` si pas encore fait, ou directement `/feature "<première feature>"`
+- Give concrete next steps based on the stack
+- Suggest `/feature "<first feature>"` to start building
 
 ---
 
-## Règles
+## Rules
 
-- Ne jamais sauter les checkpoints
-- Ne jamais utiliser de jargon technique sans l'expliquer en même temps
-- Si l'utilisateur répond "je ne sais pas" à une question technique → choisir l'option la plus simple et expliquer pourquoi
-- Stack D = toujours signaler que c'est le mode avancé, demander confirmation explicite
+- Never skip checkpoints
+- Never use technical jargon without explaining it in the same sentence
+- If the user answers "I don't know" to a technical question → pick the simplest option and explain why
+- Stack D = always flag as advanced mode, require explicit confirmation
+- **Always respond in the user's language** — detect it from their first message and use it throughout

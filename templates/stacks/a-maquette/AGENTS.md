@@ -1,49 +1,49 @@
-# AGENTS.md — Maquette HTML
+# AGENTS.md — HTML Mockup
 
 ## Stack
-- **Frontend** : HTML5 + TailwindCSS (via CDN) + JavaScript vanilla
-- **Pas de build system** — aucune installation nécessaire
-- **Base de données** : aucune (données en dur ou localStorage si besoin)
+- **Frontend**: HTML5 + TailwindCSS (via CDN) + vanilla JavaScript
+- **No build system** — no installation required
+- **Database**: none (hardcoded data or localStorage if needed)
 
-## Structure du projet
+## Project structure
 ```
-mon-projet/
-├── index.html          ← page principale
-├── pages/              ← autres pages si besoin
+my-project/
+├── index.html          ← main page
+├── pages/              ← additional pages if needed
 │   └── *.html
 ├── assets/
 │   ├── images/
 │   └── icons/
-└── script.js           ← logique JS si nécessaire
+└── script.js           ← JS logic if needed
 ```
 
-## Commandes
+## Commands
 ```bash
-# Prévisualiser : ouvrir index.html dans Chrome/Firefox
-# Pas de pnpm, pas de npm, pas de build
+# Preview: open index.html in Chrome/Firefox
+# No pnpm, no npm, no build step
 
-# Déployer en 30 secondes :
-# → Va sur netlify.com/drop et glisse-dépose le dossier
+# Deploy in 30 seconds:
+# → Go to netlify.com/drop and drag-drop the folder
 ```
 
-## Règles pour Claude
-- Toujours inclure Tailwind via CDN dans le `<head>` : `<script src="https://cdn.tailwindcss.com"></script>`
-- Utiliser des classes Tailwind, pas de CSS custom sauf si vraiment nécessaire
-- JavaScript simple et lisible — pas de frameworks, pas d'imports
-- Tout doit fonctionner en ouvrant le fichier HTML directement (pas de serveur local requis)
-- Si l'utilisateur demande de la donnée dynamique → localStorage d'abord, expliquer les limites
-- Composants réutilisables → fonctions JS qui retournent du HTML (pas de Web Components)
+## Rules for Claude
+- Always include Tailwind via CDN in `<head>`: `<script src="https://cdn.tailwindcss.com"></script>`
+- Use Tailwind classes, no custom CSS unless strictly necessary
+- Simple, readable JavaScript — no frameworks, no imports
+- Everything must work by opening the HTML file directly (no local server required)
+- If the user asks for dynamic data → localStorage first, explain the limits
+- Reusable components → JS functions that return HTML strings
 
-## Limites de cette stack
-- Pas de comptes utilisateurs (tout le monde voit la même chose)
-- Données perdues si on vide le cache (si localStorage)
-- Pas adapté à plus de ~10 pages
+## Limits of this stack
+- No user accounts (everyone sees the same thing)
+- Data lost if cache is cleared (if using localStorage)
+- Not suited for more than ~10 pages
 
-## Déploiement
-**Netlify Drop** (gratuit, 30 secondes) :
-1. Va sur netlify.com/drop
-2. Glisse-dépose le dossier du projet
-3. Ton site est en ligne avec une URL publique
+## Deployment
+**Netlify Drop** (free, 30 seconds):
+1. Go to netlify.com/drop
+2. Drag and drop the project folder
+3. Your site is live with a public URL
 
 ## Agent Checkpoints
 Agents MUST pause and await confirmation before:
@@ -51,7 +51,7 @@ Agents MUST pause and await confirmation before:
 2. Deleting files
 
 ## Do NOT
-- Utiliser npm/pnpm/node
-- Ajouter des dépendances externes (sauf Tailwind CDN)
-- Hard-coder des données sensibles
-- Utiliser des class components ou frameworks JS
+- Use npm/pnpm/node
+- Add external dependencies (except Tailwind CDN)
+- Hard-code sensitive data in the source
+- Use JS frameworks or class-based patterns

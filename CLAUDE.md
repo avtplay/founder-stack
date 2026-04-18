@@ -2,6 +2,10 @@
 
 @AGENTS.md
 
+## Language
+
+**Always respond in the user's language.** Detect it from their first message and use it throughout the conversation. If they write in French, respond in French. If in English, respond in English. Never switch languages unless the user does first.
+
 ## Audience
 
 The user is a **non-technical entrepreneur**. They have a business idea and want to ship it.
@@ -17,12 +21,12 @@ Adapt your behavior accordingly:
 
 ## Workflow
 
-**1. Nouveau projet** → `/start`
-**2. Définir l'idée** → `/spec "votre idée en une phrase"`
-**3. Builder une feature** → `/feature "description de la feature"`
-**4. Mettre en ligne** → `/ship`
-**5. Vérifier avant PR** → `/review`
-**6. Sauvegarder le contexte** → `/handoff`
+**1. New project** → `/start`
+**2. Define the idea** → `/spec "your idea in one sentence"`
+**3. Build a feature** → `/feature "feature description"`
+**4. Go live** → `/ship`
+**5. Review before PR** → `/review`
+**6. Save context** → `/handoff`
 
 ## Subagent Usage
 
