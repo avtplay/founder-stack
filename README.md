@@ -63,9 +63,9 @@ Not sure which one? Run `/start` — Claude will ask you 6 simple questions and 
 
 ---
 
-## Quick start (WSL2 / Linux)
+## Quick start
 
-### 1. First-time setup
+### WSL2 / Linux
 
 ```bash
 git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
@@ -75,20 +75,40 @@ bash scripts/setup-wsl.sh
 
 This installs: Node 20, pnpm, Claude Code, RTK (token optimizer), SuperClaude, PostgreSQL.
 
-### 2. Authenticate Claude Code
-
 ```bash
-claude
-# Follow the login prompt — sign in with your Claude.ai account (Pro or Max)
-```
+# Authenticate
+claude   # sign in with your Claude.ai account (Pro or Max)
 
-### 3. Start your project
-
-```bash
-bash scripts/bootstrap-project.sh my-project-name --stack b --git
-cd ~/projects/my-project-name
+# Create your first project
+bash scripts/bootstrap-project.sh my-project --stack b --git
+cd ~/projects/my-project
 claude
 ```
+
+### Windows (native)
+
+Open PowerShell as Administrator:
+
+```powershell
+git clone https://github.com/avtplay/founder-stack.git $env:USERPROFILE\founder-stack
+cd $env:USERPROFILE\founder-stack
+Set-ExecutionPolicy Bypass -Scope Process
+.\scripts\setup-windows.ps1
+```
+
+This installs: Node 20, pnpm, Claude Code, Git, PostgreSQL.
+
+```powershell
+# Authenticate
+claude   # sign in with your Claude.ai account (Pro or Max)
+
+# Create your first project
+.\scripts\bootstrap-project.ps1 my-project -Stack b -Git
+cd $env:USERPROFILE\projects\my-project
+claude
+```
+
+> **Windows note:** RTK (token compression) and SuperClaude (`/sc:` commands) are not available on native Windows. All AI agents, commands, and the full workflow work normally.
 
 Then just tell Claude: **"I want to start my project"** — it takes it from there.
 
