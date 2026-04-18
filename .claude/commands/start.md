@@ -88,7 +88,15 @@ Stop as soon as you can determine the stack.
 
 ---
 
-**Q6 — Git?** *(always ask)*
+**Q6 — Mobile?** *(always ask)*
+> "Will people use this mainly on their phone, or on a computer?"
+
+→ If mobile / both → set `MOBILE=true` — the UI must be built mobile-first (touch-friendly, responsive, simple navigation)
+→ If desktop only → standard layout
+
+---
+
+**Q7 — Git?** *(always ask)*
 > "Do you know what Git is?
 >
 > It's a tool that saves the full history of your code — like unlimited Ctrl+Z over time, and it lets you collaborate with other developers later.
@@ -117,6 +125,7 @@ Present this before running anything:
 - <point 2>
 - <point 3>
 
+**Mobile-first**: <yes / no>
 **Git**: <yes / no>
 ```
 
@@ -165,8 +174,23 @@ rm -rf /tmp/founder-stack /tmp/founder-stack.zip 2>/dev/null || true
 
 - The user is already in their project folder — no `cd` needed
 - Read the new CLAUDE.md and AGENTS.md that were just created
+- If `MOBILE=true`: append the mobile rules to AGENTS.md (see below)
 - Give concrete next steps based on the stack
 - Suggest `/feature "<first feature>"` to start building
+
+#### If mobile-first: append to AGENTS.md
+
+```markdown
+## Mobile-first
+
+This app is used primarily on mobile. Apply these rules to every UI feature:
+- Tailwind mobile-first classes (design for small screen first, then scale up)
+- Touch targets minimum 44px height (use `min-h-11` or `py-3` on buttons)
+- No hover-only interactions — everything must work with a tap
+- Simple, thumb-friendly navigation (bottom bar or hamburger menu)
+- Avoid dense tables or multi-column layouts on small screens
+- Test every component at 375px width (iPhone SE viewport)
+```
 
 ---
 
