@@ -1,134 +1,179 @@
-# AI Stack — Full-Stack Agentic Setup
+# founder-stack
 
-Stack opinioné pour démarrer des projets full-stack avec Claude Code en mode autonome + checkpoints.
+**A Claude Code configuration kit for non-technical founders who want to vibe-code their MVP.**
 
-## Ce qui est inclus
+No dev experience required. You bring the idea — the AI agents handle the technical decisions, guide you through every step, and help you ship.
 
-| Outil | Rôle | Token impact |
-|-------|------|-------------|
-| **Claude Code** | Agent principal | — |
-| **RTK** | Compresse sorties CLI | −89% tokens Bash |
-| **SuperClaude** | 30 commandes /sc: + 9 personas | Meilleure qualité |
-| **ccusage** | Analytics token usage | Monitoring |
-| **cmonitor** | Live token monitor | Alertes quotas |
-| **Sous-agents CC** | Contextes isolés spécialisés | Réduit context main |
-| **GitHub Actions** | CI + agent review auto | — |
+---
 
-## Installation (WSL2)
+## What is this?
+
+founder-stack is not a code template. It's an **AI configuration layer** — a set of agents, prompts, and commands that sit on top of [Claude Code](https://claude.ai/code) and turn it into a co-founder who can code.
+
+When you open Claude Code in a founder-stack project, it knows:
+- How to ask the right questions to understand your idea
+- Which tech stack fits your needs (and why, in plain language)
+- How to guide you step by step, from first idea to live product
+- When to stop and ask for your confirmation before doing anything risky
+
+---
+
+## Who is it for?
+
+- Founders who want to build an MVP but don't know how to code
+- Solo builders who want to move fast without hiring a dev team
+- Anyone who wants to "vibe-code" a product idea into reality
+
+---
+
+## How it works
+
+```mermaid
+flowchart TD
+    A([You open Claude Code\nand say: 'start my project']) --> B[/start command/]
+    B --> C[mvp-advisor agent\naskes about your idea]
+    C --> D{What kind\nof project?}
+
+    D -->|Visual prototype| E[Stack A\nHTML + Tailwind]
+    D -->|Interactive app\nno accounts needed| F[Stack B\nReact + Vite]
+    D -->|App with user accounts\nand data| G{Firebase\nor Supabase?}
+    D -->|Complex backend logic| H[Stack D\nFull Stack ⚠️ Advanced]
+
+    G -->|Easy start\nGoogle-managed| I[Stack C-Firebase\nReact + Firebase]
+    G -->|Open source\nmore control| J[Stack C-Supabase\nReact + Supabase]
+
+    E & F & I & J & H --> K[bootstrap-project.sh\nsets up your AI config]
+    K --> L[/feature 'first feature'/]
+    L --> M[/ship — deploy to production/]
+```
+
+---
+
+## The 5 stacks
+
+| Stack | Best for | Deploy to |
+|-------|----------|-----------|
+| **A — HTML prototype** | Showing an idea, zero setup | Netlify Drop (drag & drop) |
+| **B — React app** | Interactive app, no accounts | Vercel (free) |
+| **C — React + Firebase** | App with accounts & data, fast start | Firebase Hosting |
+| **C — React + Supabase** | App with accounts & data, open source | Vercel + Supabase Cloud |
+| **D — Full Stack** ⚠️ | Complex business logic, full control | Railway |
+
+Not sure which one? Run `/start` — Claude will ask you 6 simple questions and recommend the right stack.
+
+---
+
+## Quick start (WSL2 / Linux)
+
+### 1. First-time setup
 
 ```bash
-# 1. Cloner ce repo
-git clone <repo-url> ~/ai-stack
-cd ~/ai-stack
-
-# 2. Lancer le setup (une seule fois)
+git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
+cd ~/founder-stack
 bash scripts/setup-wsl.sh
-
-# 3. Configurer la clé API
-echo 'export ANTHROPIC_API_KEY=sk-ant-...' >> ~/.bashrc
-source ~/.bashrc
 ```
 
-## Démarrer un projet
+This installs: Node 20, pnpm, Claude Code, RTK (token optimizer), SuperClaude, PostgreSQL.
+
+### 2. Authenticate Claude Code
 
 ```bash
-bash scripts/bootstrap-project.sh mon-projet
-cd ~/projects/mon-projet
-pnpm install
+claude
+# Follow the login prompt — sign in with your Claude.ai account (Pro or Max)
+```
+
+### 3. Start your project
+
+```bash
+bash scripts/bootstrap-project.sh my-project-name --stack b --git
+cd ~/projects/my-project-name
 claude
 ```
 
-## Workflow quotidien
+Then just tell Claude: **"I want to start my project"** — it takes it from there.
 
-```bash
-# Démarrer une session
-claude
+---
 
-# Dans Claude Code :
-/feature "authentification JWT complète"
-# → Phase 1: spec + checkpoint
-# → Phase 2: implémentation + checkpoint  
-# → Phase 3: tests + commit checkpoint
+## Commands
 
-# Revue avant PR
-/review
+| Command | What it does |
+|---------|-------------|
+| `/start` | Full onboarding: idea → stack choice → project setup |
+| `/spec "your idea"` | Turn a vague idea into a concrete MVP spec |
+| `/feature "description"` | Build a feature, with checkpoints before each step |
+| `/ship` | Deploy your project, guided step by step |
+| `/review` | Check your code before publishing |
+| `/handoff` | Save context before clearing the conversation |
 
-# Avant de vider le contexte
-/handoff
-/clear
-```
+---
 
-## Commandes disponibles
+## AI Agents
 
-| Commande | Description |
-|----------|-------------|
-| `/feature <desc>` | Scaffold complet avec 3 checkpoints |
-| `/review` | Revue de code pre-PR |
-| `/handoff` | Dump contexte avant /clear |
-| `/sc:implement` | SuperClaude implementation |
-| `/sc:design` | SuperClaude architecture design |
-| `/sc:test` | SuperClaude test coverage |
-| `/sc:analyze` | SuperClaude code analysis |
+Claude Code automatically delegates to specialized agents when needed:
 
-## Sous-agents disponibles
+| Agent | Triggered when |
+|-------|---------------|
+| `mvp-advisor` | You describe a new idea or want to define your project |
+| `security-reviewer` | Working on auth, payments, or sensitive data |
+| `db-architect` | Changing the database schema or writing queries |
+| `test-writer` | After implementing a feature, before shipping |
+| `frontend-specialist` | Building complex UI components |
 
-| Agent | Se déclenche pour |
-|-------|------------------|
-| `security-reviewer` | Code auth, paiements, inputs |
-| `db-architect` | Schéma, migrations, requêtes |
-| `test-writer` | Couverture de tests |
-| `frontend-specialist` | Composants React complexes |
+You don't need to trigger them manually — Claude decides when to use them.
 
-Usage : *"Use a subagent to review this auth code for security issues"*
+---
 
-## Monitoring tokens
+## Checkpoints
 
-```bash
-# Statistiques d'usage
-ccusage               # rapport daily
-ccusage monthly       # rapport mensuel
-rtk gain              # économies RTK
+Agents always stop and wait for your confirmation before:
 
-# Monitoring live (dans un autre terminal)
-cmonitor --plan max20 # adapter selon ton plan
+1. Running database migrations
+2. Committing and pushing code
+3. Modifying auth or security logic
+4. Installing new dependencies
+5. Deleting files
 
-# Depuis Claude Code
-/context              # décomposition du contexte actuel
-/cost                 # coût de la session
-```
+Nothing irreversible happens without your explicit approval.
 
-## Checkpoints automatiques
+---
 
-Les agents s'arrêtent et attendent ta validation avant :
-1. Écrire des migrations DB
-2. Commit + push
-3. Modifier la logique auth/sécurité
-4. Installer de nouvelles dépendances
-5. Supprimer des fichiers
-
-## Structure type d'un projet bootstrappé
+## Project structure (after bootstrap)
 
 ```
-mon-projet/
-├── AGENTS.md              ← source de vérité (tous outils)
-├── CLAUDE.md              ← @AGENTS.md + spécifiques CC
+my-project/
+├── CLAUDE.md              ← tells Claude how to behave in this project
+├── AGENTS.md              ← stack config (rules, commands, constraints)
 ├── .claude/
-│   ├── agents/            ← sous-agents spécialisés
-│   ├── commands/          ← /feature /review /handoff
-│   └── settings.json      ← hooks RTK + permissions
-├── .github/
-│   └── workflows/ci.yml   ← lint + tests + agent review
-├── apps/
-│   ├── web/               ← React + TypeScript + Vite
-│   └── api/               ← Node.js + Fastify
-└── packages/
-    ├── types/             ← types partagés
-    └── db/                ← Prisma schema + client
+│   ├── agents/            ← specialized AI agents
+│   ├── commands/          ← slash commands
+│   └── settings.json      ← hooks and permissions
+└── .env.local             ← your secret keys (never committed)
 ```
 
-## Tips
+---
 
-- **Context à 70%** → `/compact` avant que ça dégrade
-- **Tâche lourde en lecture** → "use a subagent for this"
-- **Plusieurs features en parallèle** → git worktrees + instances CC séparées
-- **RTK trop agressif** → `rtk proxy <cmd>` pour la sortie brute
+## Requirements
+
+- WSL2 (Ubuntu) or Linux
+- A [Claude.ai Pro or Max](https://claude.ai) account
+- ~10 minutes for the one-time setup
+
+No coding knowledge required.
+
+---
+
+## Token optimization
+
+founder-stack includes [RTK](https://github.com/rtk-ai/rtk) (Rust Token Killer), which compresses CLI output by up to 89% before it reaches Claude. This means your context stays clean longer and your Claude usage goes further.
+
+```bash
+rtk gain          # see how many tokens you've saved
+ccusage           # daily usage report
+cmonitor          # live token monitor
+```
+
+---
+
+## License
+
+MIT — free to use, fork, and build on.
