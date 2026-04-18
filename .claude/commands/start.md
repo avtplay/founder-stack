@@ -13,6 +13,27 @@ Universal entry point. Asks the right questions, picks the right stack, sets eve
 
 ## Full flow
 
+### Step 0 — Download founder-stack (if not already present)
+
+If the user gives you a founder-stack URL in an empty folder, download it before doing anything else.
+
+**Try git clone first:**
+```bash
+git clone https://github.com/avtplay/founder-stack.git /tmp/founder-stack --depth 1 -q
+```
+
+**If git is not available or clone fails — fallback to zip:**
+```bash
+curl -fsSL https://github.com/avtplay/founder-stack/archive/refs/heads/main.zip \
+  -o /tmp/founder-stack.zip \
+  && unzip -q /tmp/founder-stack.zip -d /tmp/ \
+  && mv /tmp/founder-stack-main /tmp/founder-stack
+```
+
+Founder-stack is now at `/tmp/founder-stack/`. Continue with Step 1.
+
+---
+
 ### Step 1 — The idea
 
 Use the `mvp-advisor` agent to:
@@ -127,22 +148,23 @@ Before running the script, guide the user step by step to create their project o
 
 #### Run the script
 
-founder-stack must be available locally. If not, clone it first:
 ```bash
-git clone https://github.com/avtplay/founder-stack.git ~/founder-stack
-```
-
-Then run the bootstrap **from inside the user's current project folder**:
-```bash
-bash ~/founder-stack/scripts/bootstrap-project.sh --stack <a|b|c-firebase|c-supabase|d> [--git]
+bash /tmp/founder-stack/scripts/bootstrap-project.sh --stack <a|b|c-firebase|c-supabase|d> [--git]
 ```
 
 The script sets up the AI config in the current directory.
-It also removes the founder-stack git remote if present, so the project has a clean slate.
+It automatically removes the founder-stack git remote if the folder was a clone.
+
+#### Clean up temp files
+
+```bash
+rm -rf /tmp/founder-stack /tmp/founder-stack.zip 2>/dev/null || true
+```
 
 #### After the script
 
 - The user is already in their project folder — no `cd` needed
+- Read the new CLAUDE.md and AGENTS.md that were just created
 - Give concrete next steps based on the stack
 - Suggest `/feature "<first feature>"` to start building
 

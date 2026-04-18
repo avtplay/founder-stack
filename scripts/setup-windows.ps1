@@ -117,6 +117,14 @@ if (Test-Path "$stackDir\.claude") {
     Success "Global agents & commands copied"
 }
 
+# ── 10. Install global CLAUDE.md ──────────────────────────────
+Info "Global CLAUDE.md → $claudeDir\CLAUDE.md"
+$globalClaude = Join-Path $stackDir "templates\global-claude.md"
+if (Test-Path $globalClaude) {
+    Copy-Item $globalClaude "$claudeDir\CLAUDE.md" -Force
+    Success "Global CLAUDE.md installed — Claude will auto-bootstrap in any empty folder"
+}
+
 # ── Summary ──────────────────────────────────────────────────
 Write-Host ""
 Write-Host "╔══════════════════════════════════════════════════╗" -ForegroundColor Green

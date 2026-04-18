@@ -65,9 +65,7 @@ Not sure which one? Run `/start` — Claude will ask you 6 simple questions and 
 
 ## Quick start
 
-founder-stack is installed once as a tool, then used to configure any number of projects.
-
-### Step 1 — Install the tool (once)
+### Step 1 — One-time setup (install tools)
 
 **WSL2 / Linux**
 ```bash
@@ -84,38 +82,21 @@ Set-ExecutionPolicy Bypass -Scope Process
 claude   # sign in with your Claude.ai account (Pro or Max)
 ```
 
----
-
-### Step 2 — Start a new project
-
-Create an empty folder for your project, go into it, and run the bootstrap:
-
-**WSL2 / Linux**
-```bash
-mkdir ~/my-project && cd ~/my-project
-bash ~/founder-stack/scripts/bootstrap-project.sh --stack b --git
-claude
-```
-
-**Windows**
-```powershell
-mkdir $env:USERPROFILE\my-project; cd $env:USERPROFILE\my-project
-& "$env:USERPROFILE\founder-stack\scripts\bootstrap-project.ps1" -Stack b -Git
-claude
-```
-
-The bootstrap sets up the AI config **in your current folder** — no files created elsewhere.
-If the folder was previously a founder-stack clone, the git remote is cleaned up automatically.
+This installs Node, pnpm, Claude Code, and a global config that teaches Claude how to bootstrap any new project automatically.
 
 ---
 
-### Step 3 — Tell Claude what you want to build
+### Step 2 — Every new project (same flow every time)
 
-Once Claude Code is open in your project folder, just say:
+1. Create an empty folder and open Claude Code inside it
+2. Tell Claude:
 
-> **"I want to start my project"**
+> **"Here's the link: https://github.com/avtplay/founder-stack.git — start my project"**
 
-Claude will ask you a few simple questions and guide you through the rest.
+That's it. Claude downloads founder-stack, asks you a few questions about your idea, configures everything in your current folder, and guides you to your first feature.
+
+- If `git` is available: uses `git clone`
+- If not: downloads and unzips automatically
 
 > **Windows note:** RTK (token compression) and SuperClaude (`/sc:` commands) are not available on native Windows. All AI agents, commands, and the full workflow work normally.
 

@@ -153,9 +153,16 @@ STACK_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Copy agents and commands if running from the stack repo
 if [ -d "$STACK_DIR/.claude" ]; then
-  cp -r "$STACK_DIR/.claude/agents/"* "$HOME/.claude/agents/" 2>/dev/null || true
+  cp -r "$STACK_DIR/.claude/agents/"*   "$HOME/.claude/agents/"   2>/dev/null || true
   cp -r "$STACK_DIR/.claude/commands/"* "$HOME/.claude/commands/" 2>/dev/null || true
   success "Global agents & commands copied"
+fi
+
+# ── 13. Install global CLAUDE.md ─────────────────────────────
+info "Global CLAUDE.md → ~/.claude/CLAUDE.md"
+if [ -f "$STACK_DIR/templates/global-claude.md" ]; then
+  cp "$STACK_DIR/templates/global-claude.md" "$HOME/.claude/CLAUDE.md"
+  success "Global CLAUDE.md installed — Claude will auto-bootstrap in any empty folder"
 fi
 
 # ── Summary ─────────────────────────────────────────────────
